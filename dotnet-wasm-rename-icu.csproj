@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RuntimeIdentifier>browser-wasm</RuntimeIdentifier>
+    <OutputType>Exe</OutputType>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+    <NewIcuFileExtension>.icu</NewIcuFileExtension>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <WasmExtraFilesToDeploy Include="index.html" />
+    <WasmExtraFilesToDeploy Include="main.js" />
+  </ItemGroup>
+
+  <Target Name="RenameIcuToAppBundle" AfterTargets="WasmBuildApp;WasmNestedPublishApp">
+    <ItemGroup>
+      <IcuFiles Include="$(OutputPath)\**\*.dat" />
+    </ItemGroup>
+
+    <Move SourceFiles="@(IcuFiles)"
+      OverwriteReadOnlyFiles="true"
+      DestinationFiles="%(RelativeDir)%(Filename)$(NewIcuFileExtension)" />
+  </Target>
+</Project>
